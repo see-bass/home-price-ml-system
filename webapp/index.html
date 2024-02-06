@@ -2,11 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Hello World</title>
+    <title>House Price</title>
     <!-- Add some CSS to change client UI -->
     <style>
     body {
-        background-color: #232F3E;
+        background-color: #9ac7fe;
         }
     label, button {
         color: #FF9900;
@@ -23,13 +23,28 @@
     </style>
     <script>
         // define the callAPI function that takes a first name and last name as parameters
-        var callAPI = (firstName,lastName)=>{
+        var callAPI = (bedrooms,bathrooms,sqft_living,waterfront,view,grade,sqft_living15)=>{
             // instantiate a headers object
             var myHeaders = new Headers();
             // add content type header to object
             myHeaders.append("Content-Type", "application/json");
+            // Extract and convert form input values to numbers
+            // let bedrooms_val = +document.getElementById('bedrooms').value;
+            // let bathrooms_val = +document.getElementById('bathrooms').value;
+            // let sqft_living_val = +document.getElementById('sqft_living').value;
+            // let waterfront_val = +document.getElementById('waterfront').value;
+            // let view_val = +document.getElementById('view_form').value;
+            // let grade_val = +document.getElementById('grade_form').value;
+            // let sqft_living15_val = +document.getElementById('sqft_living15').value;
+            let bedrooms_val = +bedrooms;
+            let bathrooms_val = +bathrooms;
+            let sqft_living_val = +sqft_living;
+            let waterfront_val = +waterfront;
+            let view_val = +view;
+            let grade_val = +grade;
+            let sqft_living15_val = +sqft_living15;
             // using built in JSON utility package turn object to string and store in a variable
-            var raw = JSON.stringify({"firstName":firstName,"lastName":lastName});
+            var raw = JSON.stringify({"bedrooms":bedrooms_val,"bathrooms":bathrooms_val,"sqft_living":sqft_living_val,"waterfront":waterfront_val,"view":view_val,"grade":grade_val,"sqft_living15":sqft_living15_val});
             // create a JSON object with parameters for API call and store in a variable
             var requestOptions = {
                 method: 'POST',
@@ -37,22 +52,80 @@
                 body: raw,
                 redirect: 'follow'
             };
+            console.log("Headers:", myHeaders);
+            console.log("Content-Type:", myHeaders.get("Content-Type"));
+            
+            // myHeaders.forEach((value, key) => {
+            //     console.log(`${key}: ${value}`);
+            // });
+
             // make API call with parameters and use promises to get response
-            fetch("https://xl3irdyq9d.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
-            .then(response => response.text())
-            .then(result => alert(JSON.parse(result).body))
+            // fetch("https://av5ea7yq90.execute-api.us-east-1.amazonaws.com/Prod/calculate_price/", requestOptions)
+            // .then(response => response.text())
+            // .then(result => alert(JSON.parse(result).body))
+            // .catch(error => console.log('error', error));
+            fetch("https://av5ea7yq90.execute-api.us-east-1.amazonaws.com/Prod/calculate_price/", requestOptions)
+            .then(response => response.json())  // Parse the first level of JSON
+            .then(data => {
+                // The 'body' key contains a JSON string, so parse it to get the actual object
+                const prediction = JSON.parse(data.prediction);
+                // Select the predictionResult element and update its content
+                document.getElementById('predictionResult').innerText = 'Prediction: ' + prediction;
+            })
+            // .then(data => {
+            //     console.log("data:", data);  // Process the JSON data
+            // })
             .catch(error => console.log('error', error));
         }
     </script>
 </head>
 <body>
+
+<div class="header">
+    <h1>My Website</h1>
+    <p>Welcome to my simple website!</p>
+</div>
+
+<div class="nav">
+    <a href="#">Home</a>
+    <a href="#about">About</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+</div>
+
+<div class="content">
+    <h2>Main Content</h2>
+    <p>This is the main content of your website. You can add text, images, and more here.</p>
+</div>
+
+<div class="about" id="about">
+    <h2>About Us</h2>
+    <p>This section is all about us. Here you can add more information about your company, team, or yourself.</p>
+
     <form>
-        <label>First Name :</label>
-        <input type="text" id="fName">
-        <label>Last Name :</label>
-        <input type="text" id="lName">
+        <label>Bedrooms :</label>
+        <input type="number" id="bedrooms_form">
+        <label>Bathrooms :</label>
+        <input type="number" id="bathrooms_form">
+        <label>Square Feet Living Space :</label>
+        <input type="number" id="sqft_living_form">
+        <label>Waterfront Access :</label>
+        <input type="number" id="waterfront_form">
+        <label>Scenic Views :</label>
+        <input type="number" id="view_form">
+        <label>Construction Grade :</label>
+        <input type="number" id="grade_form">
+        <label>Square Feet Living Space of 15 Neighbors (Avg) :</label>
+        <input type="number" id="sqft_living15_form">
         <!-- set button onClick method to call function we defined passing input values as parameters -->
-        <button type="button" onclick="callAPI(document.getElementById('fName').value,document.getElementById('lName').value)">Call API</button>
+        <button type="button" onclick="callAPI(document.getElementById('bedrooms_form').value,document.getElementById('bathrooms_form').value,document.getElementById('sqft_living_form').value,document.getElementById('waterfront_form').value,document.getElementById('view_form').value,document.getElementById('grade_form').value,document.getElementById('sqft_living15_form').value)">Call API</button>
     </form>
+</div>
+
+<!-- Container to display the prediction -->
+<div id="predictionResult" style="border: 1px solid black; padding: 10px; width: 300px; margin: 20px;">
+    Prediction will be shown here.
+</div>
+
 </body>
 </html>

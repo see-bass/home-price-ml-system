@@ -5,6 +5,7 @@ import numpy as np
 from flask import Flask, request, jsonify
 from pathlib import Path
 from tensorflow import keras
+#from keras import layers
 
 import os
 import joblib
@@ -49,6 +50,7 @@ class Model:
                     tar.extractall(path=directory)
 
                 Model.model = keras.models.load_model(directory)
+                #Model.model = layers.TFSMLayer(directory,call_endpoint="serving_default")
 
                 Model.feat = joblib.load(os.path.join(directory, "features.joblib"))
 

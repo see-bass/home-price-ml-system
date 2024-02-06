@@ -1,0 +1,16 @@
+{
+  "method": "POST",
+  "headers": {
+      "Content-Type": "application/json"
+  },
+  "body": {
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "sqft_living": 1180,
+    "waterfront": 0,
+    "view": 0,
+    "grade": 7,
+    "sqft_living15": 1340
+  },
+  "redirect": "follow"
+}
